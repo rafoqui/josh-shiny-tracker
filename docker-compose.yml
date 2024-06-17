@@ -1,0 +1,72 @@
+
+services:
+  servicio-pokes:
+    image: pokeservicio
+    restart: always
+    container_name: pokeservicio
+    networks:
+      - "shiny-network"
+    environment:
+      DB_URL: jdbc:mysql://pokes-tracker:3306/pokemon?createDatabaseIfNotExist=true&serverTimezone=UTC
+      DB_USER_NAME: root
+      DB_PASSWORD: 1234
+      EUREKA_URL: http://eureka-server:8761/eureka
+    depends_on:
+      - pokes-tracker
+      - eureka-server
+  servicio-contadores:
+    image: contaservicio
+    restart: always
+    container_name: contaservicio
+    networks:
+      - "shiny-network"
+    environment:
+      DB_URL: jdbc:mysql://pokes-tracker:3306/pokemon?createDatabaseIfNotExist=true&serverTimezone=UTC
+      DB_USER_NAME: root
+      DB_PASSWORD: 1234
+      EUREKA_URL: http://eureka-server:8761/eureka
+    depends_on:
+      - pokes-tracker
+      - eureka-server
+  servidor-gateway:
+    image: gateway
+    restart: always
+    container_name: gateway
+    ports:
+      - "7000:7000"
+    networks:
+      - "shiny-network"
+    environment:
+      EUREKA_URL: http://eureka-server:8761/eureka
+    depends_on:
+      - eureka-server
+  eureka-server:
+    image: eureka
+    restart: always
+    container_name: eureka
+    ports:
+      - "8761:8761"
+    networks:
+      - "shiny-network"
+    depends_on:
+      - pokes-tracker
+  pokes-tracker:
+    image: mysql:8.0
+    restart: always
+    container_name: pokes-tracker
+    ports:
+      - "3307:3306"
+    networks:
+      - "shiny-network"
+    environment:
+      MYSQL_ROOT_PASSWORD: 1234
+      MYSQL_PASSWORD: 1234
+      MYSQL_DATABASE: pokemon
+    volumes:
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+networks:
+  shiny-network:
+    external: true
+volumes:
+  mysql-data:
+    

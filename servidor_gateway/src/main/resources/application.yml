@@ -1,0 +1,29 @@
+server:
+  port: 7000
+spring:
+  application:
+    name: servidor-gateway
+  cloud: 
+   gateway:
+      routes:
+      - id: serv-conta
+          #lb:// cuando se va a acceder a través de Eureka
+        uri: lb://servicio-contadores #http://localhost:8080
+        predicates:
+          - Path=/scounters/**
+        filters:
+          - RewritePath=/scounters/*, /
+          
+      - id: serv-pokes
+          #lb:// cuando se va a acceder a través de Eureka
+        uri: lb://servicio-pokes #http://localhost:8080
+        predicates:
+          - Path=/spokes/**
+        filters:
+          - RewritePath=/spokes/*, /
+          
+        
+eureka:                  
+ client:
+  serviceUrl:
+   defaultZone: ${EUREKA_URL} 
