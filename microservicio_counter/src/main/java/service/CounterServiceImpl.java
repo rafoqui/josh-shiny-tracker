@@ -18,6 +18,10 @@ public class CounterServiceImpl implements CounterService {
 	@Autowired
 	CharmVerification sc;
 	
+	/**
+	 * Calculates the odds and set the appropiate URL for the sprite before
+	 * creating the counter
+	 */
 	@Override
 	public boolean agregarCounter(Counter counter) {
 		if(dao.recuperarCounter(counter.getId())==null) {
@@ -34,6 +38,9 @@ public class CounterServiceImpl implements CounterService {
 		return dao.devolverCounters();
 	}
 
+	/**
+	 * Updates the counter's odds every time this method is called.
+	 */
 	@Override
 	public void actualizarCounter(Counter counter) {
 		if(dao.recuperarCounter(counter.getId())!=null) {
@@ -56,6 +63,13 @@ public class CounterServiceImpl implements CounterService {
 		return dao.recuperarCounter(idCounter);
 	}
 
+	/**
+	 * Sets the counter's odds according the method and generation selected, if
+	 * the method is not contained in the selected generation, it sets the odds
+	 * to a "Wrong generation!" message.
+	 * The params passed on each block are based on the odds calculations for
+	 * every method. 
+	 */
 	@Override
 	public void oddsCalculator(Counter counter) {
 		String rE = "Random encounters/Soft resets";
@@ -161,6 +175,9 @@ public class CounterServiceImpl implements CounterService {
 		}
 	}
 
+	/**
+	 * Modifies the boolean attribute of the counter class.
+	 */
 	@Override
 	public void modificarShinyCharm(Counter counter, boolean charm) {
 		if(sc.verDispShinyCharm(counter)) {
@@ -168,6 +185,10 @@ public class CounterServiceImpl implements CounterService {
 		}
 	}
 	
+	/**
+	 * Sets the counter's sprite according to the generation selected.
+	 * @param counter
+	 */
 	public void modificarSprites(Counter counter) {
 		String baseUrlforSprites = "https://img.pokemondb.net/sprites";
 	    String baseUrlforModels = "https://projectpokemon.org/images/shiny-sprite";
@@ -201,6 +222,14 @@ public class CounterServiceImpl implements CounterService {
 	    }
 	}
 	
+	/**
+	 * It corrects pokemon names that have special characters or spaces in between
+	 * so they match the source URL specific sprite. It is based on whether the
+	 * generation is above 5 or below 6.
+	 * @param name
+	 * @param gen
+	 * @return
+	 */
 	public String nameOddities(String name, int gen) {
 	    StringBuilder sb = new StringBuilder(name);
 	    String modifiedName = name;

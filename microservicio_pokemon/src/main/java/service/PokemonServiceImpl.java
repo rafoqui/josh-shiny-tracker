@@ -14,6 +14,9 @@ public class PokemonServiceImpl implements PokemonService {
 	@Autowired
 	PokemonDao dao;
 	
+	/**
+	 * Returns all the names from the database that contains the term passed.
+	 */
 	@Override
 	public List<Pokemon> buscarPokemon(String name) {
 		return dao.buscarPokemon(name);

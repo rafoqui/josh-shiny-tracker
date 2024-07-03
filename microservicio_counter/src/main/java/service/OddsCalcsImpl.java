@@ -11,6 +11,12 @@ public class OddsCalcsImpl implements OddsCalcs {
 	@Autowired
 	CharmVerification charm;
 
+	/**
+	 * This methods returns a string which contains the odds for the counter.
+	 * Some of them first verify if the boolean is true so they can apply
+	 * changes to the final result.  
+	 */
+
 	@Override
 	public String baseRates(int rolls, int odds, Counter counter) {
 		if(charm.verShinyCharm(counter)) {
